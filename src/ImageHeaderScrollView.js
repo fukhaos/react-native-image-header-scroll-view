@@ -118,13 +118,24 @@ class ImageHeaderScrollView extends Component<Props, State> {
 
   renderHeaderProps() {
     if (this.props.headerImage) {
+       const imageTranslate = this.state.scrollY.interpolate({
+      inputRange: [0, this.props.maxHeight * 0.6],
+      outputRange: [0, -this.props.maxHeight * 0.2 ],
+      extrapolate: this.props.foregroundExtrapolate,
+    });
+
+    const imageTransformStyle = {
+      height: this.props.maxHeight,
+      transform: [{ translateY: imageTranslate }],
+    };
       return (
-        <Image
+        <Animated.Image
           source={this.props.headerImage}
-          style={{
+          style={[imageTransformStyle, {
+            
             height: this.props.maxHeight,
             width: Dimensions.get('window').width,
-          }}
+          }]}
         />
       );
     }
@@ -156,6 +167,8 @@ class ImageHeaderScrollView extends Component<Props, State> {
     const disableOverlay =
       this.props.minOverlayOpacity === this.props.maxOverlayOpacity &&
       this.props.maxOverlayOpacity === 0;
+
+   
 
     return (
       <Animated.View style={[styles.header, headerTransformStyle, this.props.headerContainerStyle]}>
